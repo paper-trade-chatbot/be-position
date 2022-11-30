@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS `be-position`.`position`
     `product_code` VARCHAR(32) NOT NULL COMMENT '產品代號',
     `trade_type` TINYINT(4) NOT NULL COMMENT '買賣類別 1:買 2:賣',
     `position_status` TINYINT(4) NOT NULL COMMENT '倉位狀態 1:開倉 2:關倉',
+    `process_state` TINYINT(4) NOT NULL COMMENT '處理狀態 1:開倉 2:等待關倉 3:關倉',
     `amount` DECIMAL(19,4) NOT NULL COMMENT '倉位數量',
     `unit_price` DECIMAL(19,4) NOT NULL COMMENT '成交單價',
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '創建時間',

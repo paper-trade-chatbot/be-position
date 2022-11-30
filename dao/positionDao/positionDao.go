@@ -44,6 +44,7 @@ type QueryModel struct {
 	ProductCode    *string
 	TradeType      *dbModels.TradeType
 	PositionStatus *dbModels.PositionStatus
+	ProcessState   *dbModels.ProcessState
 	Amount         *decimal.Decimal
 	UnitPrice      *decimal.Decimal
 	CreatedFrom    *time.Time
@@ -53,6 +54,7 @@ type QueryModel struct {
 
 type UpdateModel struct {
 	PositionStatus *dbModels.PositionStatus
+	ProcessState   *dbModels.ProcessState
 	Amount         *decimal.Decimal
 }
 
@@ -157,6 +159,9 @@ func Modify(tx *gorm.DB, model *dbModels.PositionModel, lock *QueryModel, update
 	if update.Amount != nil {
 		attrs["amount"] = *update.Amount
 	}
+	if update.ProcessState != nil {
+		attrs["process_state"] = *update.ProcessState
+	}
 
 	if lock == nil {
 		lock = &QueryModel{}
@@ -180,6 +185,7 @@ func queryChain(query *QueryModel) func(db *gorm.DB) *gorm.DB {
 			Scopes(productCodeEqualScope(query.ProductCode)).
 			Scopes(tradeTypeEqualScope(query.TradeType)).
 			Scopes(positionStatusEqualScope(query.PositionStatus)).
+			Scopes(processStateEqualScope(query.ProcessState)).
 			Scopes(amountEqualScope(query.Amount)).
 			Scopes(unitPriceEqualScope(query.UnitPrice)).
 			Scopes(createdBetweenScope(query.CreatedFrom, query.CreatedTo)).
@@ -257,6 +263,15 @@ func positionStatusEqualScope(positionStatus *dbModels.PositionStatus) func(db *
 			return db.Where(table+".position_status = ?", *positionStatus)
 		}
 		return db.Where(table + ".position_status IN (1,2)")
+	}
+}
+
+func processStateEqualScope(processState *dbModels.ProcessState) func(db *gorm.DB) *gorm.DB {
+	return func(db *gorm.DB) *gorm.DB {
+		if processState != nil {
+			return db.Where(table+".process_state = ?", *processState)
+		}
+		return db
 	}
 }
 
