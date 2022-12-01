@@ -161,7 +161,7 @@ func (impl *PositionImpl) ClosePosition(ctx context.Context, in *position.CloseP
 		}
 
 		if model.Amount.LessThan(closeAmount) || closeAmount.LessThanOrEqual(decimal.Zero) {
-			logging.Error(ctx, "[ClosePosition] failed: %v", common.ErrInvalidCloseAmount)
+			logging.Error(ctx, "[ClosePosition] position amount [%s], close amount [%s] failed: %v", model.Amount, closeAmount, common.ErrInvalidCloseAmount)
 			return nil, common.ErrInvalidCloseAmount
 		}
 
