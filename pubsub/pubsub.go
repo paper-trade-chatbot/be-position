@@ -6,8 +6,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/paper-trade-chatbot/be-position/config"
-	"github.com/paper-trade-chatbot/be-position/logging"
+	"github.com/paper-trade-chatbot/be-common/config"
+	"github.com/paper-trade-chatbot/be-common/logging"
 	bePubsub "github.com/paper-trade-chatbot/be-pubsub"
 
 	rabbitmqOrder "github.com/paper-trade-chatbot/be-pubsub/order/openPosition/rabbitmq"

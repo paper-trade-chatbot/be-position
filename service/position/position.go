@@ -5,9 +5,9 @@ import (
 	"errors"
 
 	common "github.com/paper-trade-chatbot/be-common"
+	"github.com/paper-trade-chatbot/be-common/database"
+	"github.com/paper-trade-chatbot/be-common/logging"
 	"github.com/paper-trade-chatbot/be-position/dao/positionDao"
-	"github.com/paper-trade-chatbot/be-position/database"
-	"github.com/paper-trade-chatbot/be-position/logging"
 	"github.com/paper-trade-chatbot/be-position/models/dbModels"
 	"github.com/paper-trade-chatbot/be-proto/position"
 	"github.com/paper-trade-chatbot/be-proto/product"
@@ -18,6 +18,7 @@ import (
 type PositionIntf interface {
 	OpenPosition(ctx context.Context, in *position.OpenPositionReq) (*position.OpenPositionRes, error)
 	PendingToClosePosition(ctx context.Context, in *position.PendingToClosePositionReq) (*position.PendingToClosePositionRes, error)
+	StopPendingPosition(context.Context, *position.StopPendingPositionReq) (*position.StopPendingPositionRes, error)
 	ClosePosition(ctx context.Context, in *position.ClosePositionReq) (*position.ClosePositionRes, error)
 	GetPositions(ctx context.Context, in *position.GetPositionsReq) (*position.GetPositionsRes, error)
 	ModifyPosition(ctx context.Context, in *position.ModifyPositionReq) (*position.ModifyPositionRes, error)
@@ -129,6 +130,10 @@ func (impl *PositionImpl) PendingToClosePosition(ctx context.Context, in *positi
 	}, nil
 }
 
+func (impl *PositionImpl) StopPendingPosition(context.Context, *position.StopPendingPositionReq) (*position.StopPendingPositionRes, error) {
+	return nil, common.ErrNotImplemented
+}
+
 func (impl *PositionImpl) ClosePosition(ctx context.Context, in *position.ClosePositionReq) (*position.ClosePositionRes, error) {
 	logging.Info(ctx, "[ClosePosition] in: %#v", in)
 	db := database.GetDB()
@@ -162,7 +167,6 @@ func (impl *PositionImpl) ClosePosition(ctx context.Context, in *position.CloseP
 
 		if model.Amount.LessThan(closeAmount) || closeAmount.LessThanOrEqual(decimal.Zero) {
 			logging.Error(ctx, "[ClosePosition] position amount [%s], close amount [%s] failed: %v", model.Amount, closeAmount, common.ErrInvalidCloseAmount)
-			logging.Error(ctx, "[ClosePosition] position %#v", model)
 			return nil, common.ErrInvalidCloseAmount
 		}
 

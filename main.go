@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"runtime/debug"
 
-	"github.com/paper-trade-chatbot/be-position/cache"
+	"github.com/paper-trade-chatbot/be-common/cache"
+	"github.com/paper-trade-chatbot/be-common/database"
 	"github.com/paper-trade-chatbot/be-position/cronjob"
-	"github.com/paper-trade-chatbot/be-position/database"
 	"github.com/paper-trade-chatbot/be-position/service/position"
 	positionGrpc "github.com/paper-trade-chatbot/be-proto/position"
 
@@ -18,11 +18,11 @@ import (
 	"google.golang.org/grpc/reflection"
 	"google.golang.org/grpc/status"
 
-	"github.com/paper-trade-chatbot/be-position/config"
-	"github.com/paper-trade-chatbot/be-position/global"
-	"github.com/paper-trade-chatbot/be-position/logging"
+	"github.com/paper-trade-chatbot/be-common/config"
+	"github.com/paper-trade-chatbot/be-common/global"
+	"github.com/paper-trade-chatbot/be-common/logging"
+	"github.com/paper-trade-chatbot/be-common/server"
 	"github.com/paper-trade-chatbot/be-position/pubsub"
-	"github.com/paper-trade-chatbot/be-position/server"
 )
 
 func main() {
