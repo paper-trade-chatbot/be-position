@@ -27,36 +27,19 @@ import (
 
 func main() {
 
-	// We're running, turn on the liveness indication flag.
 	global.Alive = true
 
-	// Create root context.
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
-	// Setup logging module.
-	// NOTE: This should always be first.
 	logging.Initialize(ctx)
 	defer logging.Finalize()
 
-	// // Setup redis
 	cache.Initialize(ctx)
 	defer cache.Finalize()
 
-	// // Setup quote redis
-	// redisQuote.Initialize(ctx)
-	// defer redisQuote.Finalize()
-
-	// // Setup cache module.
-	// redisCluster.Initialize(ctx)
-	// defer redisCluster.Finalize()
-
-	// // Setup database module.
 	database.Initialize(ctx)
 	defer database.Finalize()
-
-	// service.Initialize(ctx)
-	// defer service.Finalize(ctx)
 
 	pubsub.Initialize(ctx)
 	defer pubsub.Finalize(ctx)
@@ -87,13 +70,11 @@ func main() {
 	positionInstance := position.New()
 	positionGrpc.RegisterPositionServiceServer(grpc, positionInstance)
 
-	// Create HTTP server instance to listen on all interfaces.
 	address := fmt.Sprintf("%s:%s",
 		config.GetString("SERVER_LISTEN_ADDRESS"),
 		config.GetString("SERVER_LISTEN_PORT"))
 	httpServer := server.CreateHttpServer(ctx, address)
 
-	// run cron job
 	go cronjob.Cron()
 
 	go func() {
@@ -103,11 +84,8 @@ func main() {
 		}
 	}()
 
-	// Now that we finished initializing all necessary modules,
-	// let's turn on the readiness indication flag.
 	global.Ready = true
 
-	// Start servicing requests.
 	logging.Info(ctx, "Initialization complete, listening on %s...", address)
 	if err := httpServer.ListenAndServe(); err != nil {
 		logging.Info(ctx, err.Error())
